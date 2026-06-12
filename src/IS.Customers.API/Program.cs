@@ -1,3 +1,4 @@
+using IS.Core.Logging;
 using IS.Customers.API.Configuration;
 using IS.Customers.API.Data;
 
@@ -8,13 +9,16 @@ builder.Services.AddOpenApi()
                 .AddDependenciesConfiguration()
                 .AddControllers();
 
+builder.AddDefaultSerilog("LogsConnection");
+
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
     app.UseOpenApiScalar();
 
 app.UseHttpsRedirection()
-   .UseAuthorization();
+   .UseAuthorization()
+   .UseSerilog();
 
 app.MapControllers();
 app.Run();

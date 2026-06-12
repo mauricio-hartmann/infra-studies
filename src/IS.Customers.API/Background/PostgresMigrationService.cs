@@ -1,7 +1,5 @@
 ﻿using IS.Customers.API.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Data.Common;
 
 namespace IS.Customers.API.Background
 {
