@@ -2,4 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/IS.Customers.API/IS.Customers.API.csproj" Id="71481f4a-0116-4873-ab8e-020747edf2de" />
   </Folder>
+  <Folder Name="/src/shared/">
+    <Project Path="src/shared/IS.Core/IS.Core.csproj" Id="f9247a3a-1c1f-4b4b-910a-642860f42d6c" />
+  </Folder>
 </Solution>
