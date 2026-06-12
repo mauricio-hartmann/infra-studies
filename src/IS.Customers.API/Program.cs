@@ -1,18 +1,17 @@
-using Scalar.AspNetCore;
+using IS.Customers.API.Configuration;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
-builder.Services.AddOpenApi(options => options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0);
+
+builder.Services.AddOpenApi()
+                .AddControllers();
 
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
+    app.UseOpenApiScalar();
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseHttpsRedirection()
+    .UseAuthorization();
+
 app.MapControllers();
 app.Run();
