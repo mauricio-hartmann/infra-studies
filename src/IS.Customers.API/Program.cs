@@ -11,7 +11,7 @@ if (app.Environment.IsDevelopment())
     app.UseOpenApiScalar();
 
 app.UseHttpsRedirection()
-    .UseAuthorization();
+   .UseAuthorization();
 
 app.MapControllers();
 app.Run();
