@@ -1,7 +1,5 @@
 ﻿using IS.Customers.API.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Sockets;
-using System.Xml.Linq;
 
 namespace IS.Customers.API.Background
 {
