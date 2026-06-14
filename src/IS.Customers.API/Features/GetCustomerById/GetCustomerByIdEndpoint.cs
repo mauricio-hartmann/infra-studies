@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IS.Customers.API.Features.GetCustomerById
 {
     [Route("api/customer")]
+    [Tags("Customers")]
     public class GetCustomerByIdEndpoint : BaseController
     {
         private readonly IMediator _mediator;

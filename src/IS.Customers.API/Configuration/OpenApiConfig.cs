@@ -1,5 +1,4 @@
 ﻿using Microsoft.OpenApi;
-using Scalar.AspNetCore;
 
 namespace IS.Customers.API.Configuration
 {
@@ -14,8 +13,11 @@ namespace IS.Customers.API.Configuration
 
         public static WebApplication UseOpenApiScalar(this WebApplication app)
         {
-            app.MapOpenApi();
-            app.MapScalarApiReference();
+            if (app.Environment.IsDevelopment())
+            {
+                app.MapOpenApi();
+                app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
+            }
 
             return app;
         }

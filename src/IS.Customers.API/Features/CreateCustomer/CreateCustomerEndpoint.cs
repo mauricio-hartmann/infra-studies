@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IS.Customers.API.Features.CreateCustomer
 {
     [Route("api/customer")]
+    [Tags("Customers")]
     public class CreateCustomerEndpoint : BaseController
     {
         private readonly IMediator _mediator;
