@@ -5,7 +5,9 @@ namespace IS.Customers.API.Entities
     public class Customer : AuditedEntity, IAggregateRoot
     {
         public string LegalName { get; set; }
+        public string NormalizedLegalName { get; set; }
         public string TradeName { get; set; }
+        public string NormalizedTradeName { get; set; }
         public string RegistrationNumber { get; init; }
         public string Email { get; set; }
         public string MainPhone { get; set; }

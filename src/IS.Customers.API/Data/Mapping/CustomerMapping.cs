@@ -13,7 +13,13 @@ namespace IS.Customers.API.Data.Mapping
             builder.Property(x => x.LegalName)
                 .IsRequired();
 
+            builder.Property(x => x.NormalizedLegalName)
+                .IsRequired();
+
             builder.Property(x => x.TradeName)
+                .IsRequired();
+
+            builder.Property(x => x.NormalizedTradeName)
                 .IsRequired();
 
             builder.Property(x => x.RegistrationNumber)
