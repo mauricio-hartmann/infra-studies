@@ -2,7 +2,7 @@
 
 namespace IS.Customers.API.Features.GetCustomerById
 {
-    public class GetCustomerByIdQuery : IQuery<CustomerDTO>
+    public class GetCustomerByIdQuery : IQuery<CustomerDTO?>
     {
         public Guid Id { get; init; }
 

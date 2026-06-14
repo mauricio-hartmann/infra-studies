@@ -1,15 +1,16 @@
 ﻿using FluentValidation;
-using IS.Customers.API.Data.Repositories.Interfaces;
+using IS.Customers.API.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace IS.Customers.API.Features.CreateCustomer
 {
     public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly CustomerDbContext _customerDbContext;
 
-        public CreateCustomerCommandValidator(ICustomerRepository customerRepository)
+        public CreateCustomerCommandValidator(CustomerDbContext customerDbContext)
         {
-            _customerRepository = customerRepository;
+            _customerDbContext = customerDbContext;
 
             RuleFor(x => x.LegalName)
                 .Cascade(CascadeMode.Stop)
@@ -36,7 +37,7 @@ namespace IS.Customers.API.Features.CreateCustomer
                     .WithMessage("{PropertyName} must have a maximum of {MaxLength} characters. You entered {TotalLength} characters.")
                 .MustAsync(async (registrationNumber, cancellationToken) =>
                 {
-                    bool exists = await _customerRepository.ExistsByRegistrationNumberAsync(registrationNumber, cancellationToken);
+                    bool exists = await CustomerExistsByRegistratioNumberAsync(registrationNumber, cancellationToken);
                     return !exists;
                 })
                     .WithMessage("A customer with same registration number already exists!");
@@ -71,6 +72,13 @@ namespace IS.Customers.API.Features.CreateCustomer
                     .WithMessage("{PropertyName} is required!")
                 .MaximumLength(255)
                     .WithMessage("{PropertyName} must have a maximum of {MaxLength} characters. You entered {TotalLength} characters.");
+        }
+
+        private async Task<bool> CustomerExistsByRegistratioNumberAsync(string registrationNumber, CancellationToken cancellationToken)
+        {
+            return await _customerDbContext.Customers
+                .AsNoTracking()
+                .AnyAsync(x => x.RegistrationNumber == registrationNumber, cancellationToken);
         }
     }
 }
