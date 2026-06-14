@@ -1,4 +1,5 @@
-﻿using IS.Core.Communication;
+﻿using FluentValidation.Results;
+using IS.Core.Communication;
 using IS.Core.Mediator.Interfaces;
 using IS.Customers.API.Data.Repositories.Interfaces;
 using IS.Customers.API.Entities;
@@ -9,23 +10,25 @@ namespace IS.Customers.API.Features.CreateCustomer
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly ILogger<CreateCustomerCommandHandler> _logger;
+        private readonly CreateCustomerCommandValidator _validator;
 
         public CreateCustomerCommandHandler(ICustomerRepository customerRepository,
-                                            ILogger<CreateCustomerCommandHandler> logger)
+                                            ILogger<CreateCustomerCommandHandler> logger,
+                                            CreateCustomerCommandValidator validator)
         {
             _customerRepository = customerRepository;
             _logger = logger;
+            _validator = validator;
         }
 
         public async Task<BaseResult<Guid>> HandleAsync(CreateCustomerCommand request, CancellationToken cancellationToken = default)
         {
             try
             {
-                bool customerAlreadyExists = await _customerRepository
-                    .ExistsByRegistrationNumberAsync(request.RegistrationNumber, cancellationToken);
+                ValidationResult validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-                if (customerAlreadyExists)
-                    return BaseResult<Guid>.Failure("A customer with same registration number already exists!");
+                if (!validationResult.IsValid)
+                    return BaseResult<Guid>.Failure(validationResult.ToDictionary());
 
                 var customer = new Customer(request.LegalName, request.TradeName, request.RegistrationNumber)
                 {

@@ -1,12 +1,13 @@
-﻿using IS.Core.Communication;
+﻿using IS.Core.API.Controllers;
+using IS.Core.API.Results;
+using IS.Core.Communication;
 using IS.Core.Mediator.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace IS.Customers.API.Features.CreateCustomer
 {
-    [ApiController]
-    public class CreateCustomerEndpoint : Controller
+    [Route("api/customer")]
+    public class CreateCustomerEndpoint : BaseController
     {
         private readonly IMediator _mediator;
 
@@ -19,17 +20,15 @@ namespace IS.Customers.API.Features.CreateCustomer
         ///  Create a new customer
         /// </summary>
         /// <returns>Customer created</returns>
-        [HttpPost("api/customer")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(string[]), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(BadRequestProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateCustomerAsync([FromBody] CreateCustomerCommand command, CancellationToken cancellationToken)
         {
             BaseResult<Guid> result = await _mediator.SendAsync(command, cancellationToken);
 
-            return result.IsValid ? Created() : BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
-            {
-                { "Mensagens", result.Errors.ToArray() }
-            }));
+            return result.IsValid ? StatusCode(StatusCodes.Status201Created, result.Response) 
+                                  : BadRequestProblem(result.Errors);
         }
     }
 }
