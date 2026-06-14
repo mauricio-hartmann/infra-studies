@@ -27,7 +27,7 @@ namespace IS.Customers.API.Features.CreateCustomer
         {
             BaseResult<Guid> result = await _mediator.SendAsync(command, cancellationToken);
 
-            return result.IsValid ? StatusCode(StatusCodes.Status201Created, result.Response) 
+            return result.IsValid ? Created($"api/customer/{result.Response}", new { id = result.Response })
                                   : BadRequestProblem(result.Errors);
         }
     }
