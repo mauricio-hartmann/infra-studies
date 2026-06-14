@@ -33,6 +33,8 @@ namespace IS.Customers.API.Data.Mapping
             builder.Property(x => x.SiteUrl)
                 .HasMaxLength(100);
 
+            builder.HasIndex(x => x.RegistrationNumber);
+
             builder.HasMany(x => x.Addresses)
                 .WithOne(a => a.Customer)
                 .HasForeignKey(a => a.CustomerId);
