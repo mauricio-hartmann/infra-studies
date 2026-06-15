@@ -1,4 +1,5 @@
 ﻿using IS.Core.DomainObjects;
+using IS.Core.Extensions;
 
 namespace IS.Customers.API.Entities
 {
@@ -20,7 +21,9 @@ namespace IS.Customers.API.Entities
         {
             Addresses = [];
             LegalName = legalName;
+            NormalizedLegalName = legalName.NormalizeToUpper();
             TradeName = tradeName;
+            NormalizedTradeName = tradeName.NormalizeToUpper();
             RegistrationNumber = registrationNumber;
         }
 
