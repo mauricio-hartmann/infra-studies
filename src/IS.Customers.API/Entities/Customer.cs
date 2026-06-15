@@ -10,11 +10,11 @@ namespace IS.Customers.API.Entities
         public string TradeName { get; set; }
         public string NormalizedTradeName { get; set; }
         public string RegistrationNumber { get; init; }
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public string MainPhone { get; set; }
-        public string SecondaryPhone { get; set; }
-        public string SiteUrl { get; set; }
-        public string MainContactName { get; set; }
+        public string? SecondaryPhone { get; set; }
+        public string? SiteUrl { get; set; }
+        public string? MainContactName { get; set; }
         public ICollection<Address> Addresses { get; init; }
 
         public Customer(string legalName, string tradeName, string registrationNumber) : base()

@@ -6,7 +6,7 @@ namespace IS.Customers.API.Entities
     {
         public string Street { get; set; }
         public string Number { get; set; }
-        public string AddressComplement { get; set; }
+        public string? AddressComplement { get; set; }
         public string City { get; set; }
         public string State { get; set; }
         public string Country { get; set; }

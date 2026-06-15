@@ -41,6 +41,20 @@ namespace IS.Customers.API.Data.Mapping
 
             builder.HasIndex(x => x.RegistrationNumber);
 
+            builder.HasIndex(x => x.NormalizedLegalName);
+
+            builder.HasIndex(x => x.NormalizedLegalName)
+                .HasDatabaseName("IX_Customers_NormalizedLegalName_Trgm")
+                .HasMethod("gin")
+                .HasOperators("gin_trgm_ops");
+
+            builder.HasIndex(x => x.NormalizedTradeName);
+
+            builder.HasIndex(x => x.NormalizedTradeName)
+                .HasDatabaseName("IX_Customers_NormalizedTradeName_Trgm")
+                .HasMethod("gin")
+                .HasOperators("gin_trgm_ops");
+
             builder.HasMany(x => x.Addresses)
                 .WithOne(a => a.Customer)
                 .HasForeignKey(a => a.CustomerId);
