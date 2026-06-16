@@ -8,38 +8,27 @@ namespace IS.Customers.API.Features.CreateCustomer
 {
     public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, BaseResult<Guid>>
     {
-        private readonly ILogger<CreateCustomerCommandHandler> _logger;
         private readonly CreateCustomerCommandValidator _validator;
         private readonly CustomerDbContext _customerDbContext;
 
-        public CreateCustomerCommandHandler(ILogger<CreateCustomerCommandHandler> logger,
-                                            CreateCustomerCommandValidator validator,
+        public CreateCustomerCommandHandler(CreateCustomerCommandValidator validator,
                                             CustomerDbContext customerDbContext)
         {
-            _logger = logger;
             _validator = validator;
             _customerDbContext = customerDbContext;
         }
 
         public async Task<BaseResult<Guid>> HandleAsync(CreateCustomerCommand request, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                ValidationResult validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            ValidationResult validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-                if (!validationResult.IsValid)
-                    return BaseResult<Guid>.Failure(validationResult.ToDictionary());
+            if (!validationResult.IsValid)
+                return BaseResult<Guid>.Failure(validationResult.ToDictionary());
 
-                Customer customer = CreateCustomer(request);
-                await SaveAsync(customer, cancellationToken);
+            Customer customer = CreateCustomer(request);
+            await SaveAsync(customer, cancellationToken);
 
-                return BaseResult<Guid>.Success(customer.Id);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BaseResult<Guid>.Failure("Unexpected error creating customer!");
-            }
+            return BaseResult<Guid>.Success(customer.Id);
         }
 
         private Customer CreateCustomer(CreateCustomerCommand command)

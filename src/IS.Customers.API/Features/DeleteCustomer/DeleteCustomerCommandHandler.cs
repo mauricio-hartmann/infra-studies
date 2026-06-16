@@ -9,33 +9,23 @@ namespace IS.Customers.API.Features.DeleteCustomer
     public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, BaseResult<bool>>
     {
         private readonly CustomerDbContext _customerDbContext;
-        private readonly ILogger<DeleteCustomerCommandHandler> _logger;
 
-        public DeleteCustomerCommandHandler(CustomerDbContext customerDbContext, ILogger<DeleteCustomerCommandHandler> logger)
+        public DeleteCustomerCommandHandler(CustomerDbContext customerDbContext)
         {
             _customerDbContext = customerDbContext;
-            _logger = logger;
         }
 
         public async Task<BaseResult<bool>> HandleAsync(DeleteCustomerCommand request, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                Customer? customer = await GetCustomerByIdAsync(request.Id, cancellationToken);
+            Customer? customer = await GetCustomerByIdAsync(request.Id, cancellationToken);
 
-                if (customer is null)
-                    return BaseResult<bool>.Failure("Customer does not exists!");
+            if (customer is null)
+                return BaseResult<bool>.Failure("Customer does not exists!");
 
-                customer.Delete();
-                await _customerDbContext.SaveChangesAsync(cancellationToken);
+            customer.Delete();
+            await _customerDbContext.SaveChangesAsync(cancellationToken);
 
-                return BaseResult<bool>.Success(true);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BaseResult<bool>.Failure("Unexpected error deleting customer.");
-            }
+            return BaseResult<bool>.Success(true);
         }
 
         private async Task<Customer?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken)
