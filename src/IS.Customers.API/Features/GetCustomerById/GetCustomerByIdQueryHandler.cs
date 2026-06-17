@@ -1,21 +1,44 @@
-﻿using IS.Core.Mediator.Interfaces;
+﻿using IS.Core.Cache;
+using IS.Core.Mediator.Interfaces;
 using IS.Customers.API.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace IS.Customers.API.Features.GetCustomerById
 {
     public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, CustomerDTO?>
     {
         private readonly CustomerDbContext _customerDbContext;
+        private readonly ICacheService _cacheService;
 
-        public GetCustomerByIdQueryHandler(CustomerDbContext customerDbContext)
+        public GetCustomerByIdQueryHandler(CustomerDbContext customerDbContext, ICacheService cacheService)
         {
             _customerDbContext = customerDbContext;
+            _cacheService = cacheService;
         }
 
         public async Task<CustomerDTO?> HandleAsync(GetCustomerByIdQuery request, CancellationToken cancellationToken = default)
         {
-            return await ByIdAsync(request.Id, cancellationToken);
+            CustomerDTO? customerFromCache = await GetFromCacheAsync(request.Id, cancellationToken);
+
+            if (customerFromCache != null) return customerFromCache;
+
+            CustomerDTO? customer = await ByIdAsync(request.Id, cancellationToken);
+
+            if (customer != null) await SetCacheAsync(customer, cancellationToken);
+
+            return customer;
+        }
+
+        private async Task<CustomerDTO?> GetFromCacheAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return await _cacheService.GetAsync<CustomerDTO?>($"-cache-customer-{id}", cancellationToken);
+        }
+
+        private async Task SetCacheAsync(CustomerDTO customer, CancellationToken cancellationToken)
+        {
+            var distributedCacheEntryOptions = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
+            await _cacheService.SetAsync($"-cache-customer-{customer.Id}", customer, distributedCacheEntryOptions, cancellationToken);
         }
 
         private async Task<CustomerDTO?> ByIdAsync(Guid id, CancellationToken cancellationToken)

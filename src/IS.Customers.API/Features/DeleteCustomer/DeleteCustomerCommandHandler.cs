@@ -1,4 +1,5 @@
-﻿using IS.Core.Communication;
+﻿using IS.Core.Cache;
+using IS.Core.Communication;
 using IS.Core.Mediator.Interfaces;
 using IS.Customers.API.Data;
 using IS.Customers.API.Entities;
@@ -9,10 +10,12 @@ namespace IS.Customers.API.Features.DeleteCustomer
     public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, BaseResult<bool>>
     {
         private readonly CustomerDbContext _customerDbContext;
+        private readonly ICacheService _cacheService;
 
-        public DeleteCustomerCommandHandler(CustomerDbContext customerDbContext)
+        public DeleteCustomerCommandHandler(CustomerDbContext customerDbContext, ICacheService cacheService)
         {
             _customerDbContext = customerDbContext;
+            _cacheService = cacheService;
         }
 
         public async Task<BaseResult<bool>> HandleAsync(DeleteCustomerCommand request, CancellationToken cancellationToken = default)
@@ -24,6 +27,7 @@ namespace IS.Customers.API.Features.DeleteCustomer
 
             customer.Delete();
             await _customerDbContext.SaveChangesAsync(cancellationToken);
+            await _cacheService.RemoveAsync($"-cache-customer-{customer.Id}", cancellationToken);
 
             return BaseResult<bool>.Success(true);
         }

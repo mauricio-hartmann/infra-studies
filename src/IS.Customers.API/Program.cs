@@ -1,4 +1,5 @@
 using IS.Core.API.Exceptions;
+using IS.Core.Cache.Configuration;
 using IS.Core.Logging;
 using IS.Core.Mediator.Configuration;
 using IS.Customers.API.Configuration;
@@ -12,6 +13,7 @@ builder.Services.AddOpenApi()
                 .AddDbContext<CustomerDbContext>("PostgresConnection", builder.Environment)
                 .AddDependenciesConfiguration()
                 .AddMediator(typeof(CreateCustomerCommand).Assembly)
+                .AddCache(builder.Configuration, "RedisConnection", "IS.Customer.API")
                 .AddControllers();
 
 builder.AddDefaultSerilog("LogsConnection");
