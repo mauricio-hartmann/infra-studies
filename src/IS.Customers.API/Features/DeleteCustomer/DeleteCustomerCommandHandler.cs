@@ -28,7 +28,7 @@ namespace IS.Customers.API.Features.DeleteCustomer
 
             customer.Delete();
             await _customerDbContext.SaveChangesAsync(cancellationToken);
-            await _cacheService.RemoveAsync(ChacheKeys.Customer(customer.Id), cancellationToken);
+            await _cacheService.RemoveAsync(CacheKeys.Customer(customer.Id), cancellationToken);
 
             return BaseResult<bool>.Success(true);
         }

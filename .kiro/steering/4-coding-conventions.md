@@ -44,6 +44,7 @@ IS.SomeApi/
 - **Implicit usings** — enabled; do not add `using System;` etc. unless required for disambiguation
 - **`async`/`await` throughout** — never `.Result` or `.Wait()`; always propagate `CancellationToken` to every async call
 - **Use types over var**: when the value to the right of `=` does not make the variable type explicit, use the type. Use `var` only when the value to the right of `=` makes the type clear. Example: `var example = new StringBuilder()`
+- **if/else and loop blocks**: always let a blank line after and before if/else blocks and loop blocks (for, while, etc)
 
 ## Endpoints
 

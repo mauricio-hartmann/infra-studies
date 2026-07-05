@@ -23,6 +23,7 @@ inclusion: always
 
 **Default language:** [pt-BR]
 **Code language:** [en-US]
+**Specs language:** [en-US]
 
 ---
 

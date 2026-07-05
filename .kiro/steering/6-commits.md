@@ -5,6 +5,7 @@ inclusion: always
 # Git Commit Conventions
 
 Never commit automatically; always wait for user instruction to both commit and push changes to the remote repository.
+First, show the commit message and asks the user for approval or changes. Only when user approves the commit message you can commit. After commit, asks the user if you can push.
 When writing or generating commit messages, the agent must strictly follow the *Conventional Commits* format:
 
 ## Format

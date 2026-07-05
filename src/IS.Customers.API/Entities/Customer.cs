@@ -40,6 +40,19 @@ namespace IS.Customers.API.Entities
             Addresses.Add(address);
         }
 
+        public void Update(string legalName, string tradeName, string? email, string mainPhone, string? secondaryPhone, string? siteUrl, string mainContactName)
+        {
+            LegalName = legalName;
+            NormalizedLegalName = legalName.NormalizeToUpper();
+            TradeName = tradeName;
+            NormalizedTradeName = tradeName.NormalizeToUpper();
+            Email = email;
+            MainPhone = mainPhone;
+            SecondaryPhone = secondaryPhone;
+            SiteUrl = siteUrl;
+            MainContactName = mainContactName;
+        }
+
         public bool DeleteAddress(Guid addressId, Guid? newMainAddressId)
         {
             Address? address = Addresses.FirstOrDefault(a => a.Id == addressId);
