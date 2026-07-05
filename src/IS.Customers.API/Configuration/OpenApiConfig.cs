@@ -11,7 +11,7 @@ namespace IS.Customers.API.Configuration
             return services;
         }
 
-        public static WebApplication UseOpenApiScalar(this WebApplication app)
+        public static WebApplication UseOpenApi(this WebApplication app)
         {
             if (app.Environment.IsDevelopment())
             {

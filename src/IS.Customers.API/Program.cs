@@ -20,10 +20,8 @@ builder.AddDefaultSerilog("LogsConnection");
 
 WebApplication app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-    app.UseOpenApiScalar();
-
-app.UseExceptionHandler()
+app.UseOpenApi()
+   .UseExceptionHandler()
    .UseHttpsRedirection()
    .UseAuthorization()
    .UseSerilog();
