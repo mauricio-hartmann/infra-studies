@@ -3,6 +3,7 @@ using IS.Core.Communication;
 using IS.Core.Mediator.Interfaces;
 using IS.Customers.API.Data;
 using IS.Customers.API.Entities;
+using IS.Customers.API.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace IS.Customers.API.Features.DeleteCustomer
@@ -27,7 +28,7 @@ namespace IS.Customers.API.Features.DeleteCustomer
 
             customer.Delete();
             await _customerDbContext.SaveChangesAsync(cancellationToken);
-            await _cacheService.RemoveAsync($"-cache-customer-{customer.Id}", cancellationToken);
+            await _cacheService.RemoveAsync(ChacheKeys.Customer(customer.Id), cancellationToken);
 
             return BaseResult<bool>.Success(true);
         }

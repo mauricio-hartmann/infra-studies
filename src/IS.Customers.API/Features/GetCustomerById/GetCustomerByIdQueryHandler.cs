@@ -1,6 +1,7 @@
 ﻿using IS.Core.Cache;
 using IS.Core.Mediator.Interfaces;
 using IS.Customers.API.Data;
+using IS.Customers.API.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 
@@ -32,13 +33,13 @@ namespace IS.Customers.API.Features.GetCustomerById
 
         private async Task<CustomerDTO?> GetFromCacheAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _cacheService.GetAsync<CustomerDTO?>($"-cache-customer-{id}", cancellationToken);
+            return await _cacheService.GetAsync<CustomerDTO?>(ChacheKeys.Customer(id), cancellationToken);
         }
 
         private async Task SetCacheAsync(CustomerDTO customer, CancellationToken cancellationToken)
         {
             var distributedCacheEntryOptions = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
-            await _cacheService.SetAsync($"-cache-customer-{customer.Id}", customer, distributedCacheEntryOptions, cancellationToken);
+            await _cacheService.SetAsync(ChacheKeys.Customer(customer.Id), customer, distributedCacheEntryOptions, cancellationToken);
         }
 
         private async Task<CustomerDTO?> ByIdAsync(Guid id, CancellationToken cancellationToken)
