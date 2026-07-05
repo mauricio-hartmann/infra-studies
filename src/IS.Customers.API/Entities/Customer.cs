@@ -1,4 +1,4 @@
-﻿using IS.Core.DomainObjects;
+using IS.Core.DomainObjects;
 using IS.Core.Extensions;
 
 namespace IS.Customers.API.Entities
@@ -38,6 +38,27 @@ namespace IS.Customers.API.Entities
             }
 
             Addresses.Add(address);
+        }
+
+        public bool DeleteAddress(Guid addressId, Guid? newMainAddressId)
+        {
+            Address? address = Addresses.FirstOrDefault(a => a.Id == addressId);
+
+            if (address is null)
+                return false;
+
+            bool wasMainAddress = address.IsMainAddress;
+            address.IsMainAddress = false;
+            address.Delete();
+
+            if (wasMainAddress && newMainAddressId.HasValue)
+            {
+                Address? newMain = Addresses.FirstOrDefault(a => a.Id == newMainAddressId.Value);
+                if (newMain is not null)
+                    newMain.IsMainAddress = true;
+            }
+
+            return true;
         }
     }
 }
