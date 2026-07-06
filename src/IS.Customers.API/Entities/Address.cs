@@ -34,5 +34,15 @@ namespace IS.Customers.API.Entities
             Country = country;
             IsMainAddress = isMainAddress;
         }
+
+        public void Update(string street, string number, string? addressComplement, string city, string state, string country)
+        {
+            Street = street;
+            Number = number;
+            AddressComplement = addressComplement;
+            City = city;
+            State = state;
+            Country = country;
+        }
     }
 }

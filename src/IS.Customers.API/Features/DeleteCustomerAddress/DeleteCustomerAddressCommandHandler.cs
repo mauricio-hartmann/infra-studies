@@ -36,18 +36,30 @@ namespace IS.Customers.API.Features.DeleteCustomerAddress
             if (customer is null)
                 return BaseResult<bool>.Failure("Customer does not exist!");
 
+            Address? address = customer.Addresses.FirstOrDefault(a => a.Id == request.AddressId);
+
+            if (address is null)
+                return BaseResult<bool>.Failure("Address does not exist or does not belong to this customer!");
+
+            if (address.IsMainAddress && !request.NewMainAddressId.HasValue)
+                return BaseResult<bool>.Failure("New main address is required when deleting the current main address!");
+
             if (request.NewMainAddressId.HasValue)
             {
-                bool newMainIsValid = customer.Addresses.Any(a => a.Id == request.NewMainAddressId.Value);
+                bool newMainIsValid = request.NewMainAddressId.Value != request.AddressId &&
+                                      customer.Addresses.Any(a => a.Id == request.NewMainAddressId.Value);
 
                 if (!newMainIsValid)
                     return BaseResult<bool>.Failure("New main address does not exist or does not belong to this customer!");
             }
 
+            if (!address.IsMainAddress && customer.Addresses.Count(a => a.Id != request.AddressId && a.IsMainAddress) != 1)
+                return BaseResult<bool>.Failure("Customer must have one main address!");
+
             bool deleted = customer.DeleteAddress(request.AddressId, request.NewMainAddressId);
 
             if (!deleted)
-                return BaseResult<bool>.Failure("Address does not exist or does not belong to this customer!");
+                return BaseResult<bool>.Failure("Customer must have exactly one main address!");
 
             await _customerDbContext.SaveChangesAsync(cancellationToken);
             await _cacheService.RemoveAsync(CacheKeys.Customer(customer.Id), cancellationToken);

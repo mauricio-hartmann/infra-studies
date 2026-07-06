@@ -1,3 +1,4 @@
+using IS.Core.Communication;
 using IS.Core.DomainObjects;
 using IS.Core.Extensions;
 
@@ -53,6 +54,28 @@ namespace IS.Customers.API.Entities
             MainContactName = mainContactName;
         }
 
+        public BaseResult<bool> UpdateAddress(Guid addressId, string street, string number, string? addressComplement, string city, string state, string country, bool isMainAddress)
+        {
+            Address? address = Addresses.FirstOrDefault(a => a.Id == addressId);
+
+            if (address is null)
+                return BaseResult<bool>.Failure("Address does not exist or does not belong to this customer!");
+
+            if (!isMainAddress && Addresses.Count(a => a.Id != addressId && a.IsMainAddress) != 1)
+                return BaseResult<bool>.Failure("Customer must have one main address!");
+
+            address.Update(street, number, addressComplement, city, state, country);
+            address.IsMainAddress = isMainAddress;
+
+            if (isMainAddress)
+                SetMainAddress(address);
+
+            if (!HasExactlyOneMainAddress())
+                return BaseResult<bool>.Failure("Customer must have exactly one main address!");
+
+            return BaseResult<bool>.Success(true);
+        }
+
         public bool DeleteAddress(Guid addressId, Guid? newMainAddressId)
         {
             Address? address = Addresses.FirstOrDefault(a => a.Id == addressId);
@@ -61,17 +84,47 @@ namespace IS.Customers.API.Entities
                 return false;
 
             bool wasMainAddress = address.IsMainAddress;
+            Guid newMainAddressIdValue = Guid.Empty;
+
+            if (wasMainAddress)
+            {
+                if (!newMainAddressId.HasValue)
+                    return false;
+
+                newMainAddressIdValue = newMainAddressId.GetValueOrDefault();
+
+                if (newMainAddressIdValue == addressId)
+                    return false;
+
+                if (Addresses.All(a => a.Id != newMainAddressIdValue))
+                    return false;
+            }
+            else if (Addresses.Count(a => a.Id != addressId && a.IsMainAddress) != 1)
+            {
+                return false;
+            }
+
             address.IsMainAddress = false;
             address.Delete();
 
-            if (wasMainAddress && newMainAddressId.HasValue)
+            if (wasMainAddress)
             {
-                Address? newMain = Addresses.FirstOrDefault(a => a.Id == newMainAddressId.Value);
-                if (newMain is not null)
-                    newMain.IsMainAddress = true;
+                Address newMain = Addresses.First(a => a.Id == newMainAddressIdValue);
+                SetMainAddress(newMain);
             }
 
-            return true;
+            return HasExactlyOneMainAddress();
+        }
+
+        private void SetMainAddress(Address mainAddress)
+        {
+            foreach (var existingAddress in Addresses)
+                existingAddress.IsMainAddress = existingAddress.Id == mainAddress.Id;
+        }
+
+        private bool HasExactlyOneMainAddress()
+        {
+            return Addresses.Count(a => !a.DateDeleted.HasValue && a.IsMainAddress) == 1;
         }
     }
 }
