@@ -6,4 +6,8 @@
     <Project Path="src/shared/IS.Core.API/IS.Core.API.csproj" Id="21134a5e-232a-4774-bf6c-ef6a70b8d18a" />
     <Project Path="src/shared/IS.Core/IS.Core.csproj" Id="f9247a3a-1c1f-4b4b-910a-642860f42d6c" />
   </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/shared/">
+    <Project Path="tests/shared/IS.Core.Tests/IS.Core.Tests.csproj" />
+  </Folder>
 </Solution>

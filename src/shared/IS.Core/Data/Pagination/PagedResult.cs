@@ -1,4 +1,4 @@
-﻿namespace IS.Core.Data.Pagination
+namespace IS.Core.Data.Pagination
 {
     public record PagedResult<T>
     {
@@ -15,7 +15,7 @@
             PageNumber = pageNumber;
             PageSize = pageSize;
             TotalCount = totalCount;
-            TotalPages = TotalCount > 0 ? TotalCount / PageNumber : 0;
+            TotalPages = TotalCount > 0 ? (int)Math.Ceiling(TotalCount / (double)PageSize) : 0;
             HasNext = PageNumber < TotalPages;
         }
     }

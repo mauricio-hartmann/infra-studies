@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Distributed;
 using System.Text;
 using System.Text.Json;
 
@@ -29,7 +29,7 @@ namespace IS.Core.Cache
         public async Task SetAsync<T>(string cacheKey, T data, DistributedCacheEntryOptions options, CancellationToken cancellationToken)
         {
             byte[] serializedData = Encoding.Default.GetBytes(JsonSerializer.Serialize(data));
-            await _cache.SetAsync(cacheKey, serializedData, cancellationToken);
+            await _cache.SetAsync(cacheKey, serializedData, options, cancellationToken);
         }
     }
 }
