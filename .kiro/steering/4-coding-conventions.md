@@ -144,4 +144,4 @@ Cache key constants live in `Shared/CacheKeys.cs`.
 
 ## Line Endings
 
-All source files (`.cs`, `.json`, `.md`, `.csproj`, `.slnx`) must use **CRLF (`\r\n`)** line endings. When creating or editing files programmatically, write CRLF explicitly. Do not commit LF-only files.
+All source files (`.cs`, `.json`, `.md`, `.csproj`, `.slnx`) must use **LF (`\n`)** line endings. When creating or editing files programmatically, write LF explicitly. Do not commit CRLF-only files.

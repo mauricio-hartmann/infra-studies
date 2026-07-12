@@ -184,6 +184,6 @@
 
 ## File Format Rules
 
-- Keep source and documentation files in CRLF line endings
+- Keep source and documentation files in LF line endings
 - Do not create LF-only files
 - Keep Markdown simple and practical for agent consumption
