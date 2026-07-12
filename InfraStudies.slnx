@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/docker/">
-    <File Path="docker/compose.yaml" />
+    <File Path=".dockerignore" />
+    <File Path="compose.yaml" />
   </Folder>
   <Folder Name="/solution-files/">
     <File Path=".env" />
