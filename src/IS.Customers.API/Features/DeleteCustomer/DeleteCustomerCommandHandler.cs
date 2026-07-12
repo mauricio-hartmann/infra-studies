@@ -21,7 +21,7 @@ namespace IS.Customers.API.Features.DeleteCustomer
 
         public async Task<BaseResult<bool>> HandleAsync(DeleteCustomerCommand request, CancellationToken cancellationToken = default)
         {
-            Customer? customer = await GetCustomerByIdAsync(request.Id, cancellationToken);
+            Customer customer = await GetCustomerByIdAsync(request.Id, cancellationToken);
 
             if (customer is null)
                 return BaseResult<bool>.Failure("Customer does not exists!");
@@ -33,7 +33,7 @@ namespace IS.Customers.API.Features.DeleteCustomer
             return BaseResult<bool>.Success(true);
         }
 
-        private async Task<Customer?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken)
+        private async Task<Customer> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return await _customerDbContext.Customers
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);

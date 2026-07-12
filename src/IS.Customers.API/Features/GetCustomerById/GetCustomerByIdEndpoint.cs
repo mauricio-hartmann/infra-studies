@@ -25,7 +25,7 @@ namespace IS.Customers.API.Features.GetCustomerById
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> CreateCustomerAsync([FromRoute] Guid id, CancellationToken cancellationToken)
         {
-            CustomerDTO? result = await _mediator.SendAsync(new GetCustomerByIdQuery(id), cancellationToken);
+            CustomerDTO result = await _mediator.SendAsync(new GetCustomerByIdQuery(id), cancellationToken);
 
             return result == null ? NoContent() : Ok(result);
         }

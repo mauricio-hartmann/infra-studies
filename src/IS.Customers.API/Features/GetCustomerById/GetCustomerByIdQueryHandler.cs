@@ -7,7 +7,7 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace IS.Customers.API.Features.GetCustomerById
 {
-    public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, CustomerDTO?>
+    public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, CustomerDTO>
     {
         private readonly CustomerDbContext _customerDbContext;
         private readonly ICacheService _cacheService;
@@ -18,22 +18,22 @@ namespace IS.Customers.API.Features.GetCustomerById
             _cacheService = cacheService;
         }
 
-        public async Task<CustomerDTO?> HandleAsync(GetCustomerByIdQuery request, CancellationToken cancellationToken = default)
+        public async Task<CustomerDTO> HandleAsync(GetCustomerByIdQuery request, CancellationToken cancellationToken = default)
         {
-            CustomerDTO? customerFromCache = await GetFromCacheAsync(request.Id, cancellationToken);
+            CustomerDTO customerFromCache = await GetFromCacheAsync(request.Id, cancellationToken);
 
             if (customerFromCache != null) return customerFromCache;
 
-            CustomerDTO? customer = await ByIdAsync(request.Id, cancellationToken);
+            CustomerDTO customer = await ByIdAsync(request.Id, cancellationToken);
 
             if (customer != null) await SetCacheAsync(customer, cancellationToken);
 
             return customer;
         }
 
-        private async Task<CustomerDTO?> GetFromCacheAsync(Guid id, CancellationToken cancellationToken)
+        private async Task<CustomerDTO> GetFromCacheAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _cacheService.GetAsync<CustomerDTO?>(CacheKeys.Customer(id), cancellationToken);
+            return await _cacheService.GetAsync<CustomerDTO>(CacheKeys.Customer(id), cancellationToken);
         }
 
         private async Task SetCacheAsync(CustomerDTO customer, CancellationToken cancellationToken)
@@ -42,7 +42,7 @@ namespace IS.Customers.API.Features.GetCustomerById
             await _cacheService.SetAsync(CacheKeys.Customer(customer.Id), customer, distributedCacheEntryOptions, cancellationToken);
         }
 
-        private async Task<CustomerDTO?> ByIdAsync(Guid id, CancellationToken cancellationToken)
+        private async Task<CustomerDTO> ByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return await _customerDbContext.Customers
                 .AsNoTracking()

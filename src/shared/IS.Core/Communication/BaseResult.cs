@@ -4,7 +4,7 @@
     {
         private const string _generalErrorKey = "General";
 
-        public T? Response { get; set; }
+        public T Response { get; set; }
         public IDictionary<string, ICollection<string>> Errors { get; init; } = new Dictionary<string, ICollection<string>>();
         public bool IsValid { get => Errors.Count == 0; }
 

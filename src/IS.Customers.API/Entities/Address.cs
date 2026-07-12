@@ -6,7 +6,7 @@ namespace IS.Customers.API.Entities
     {
         public string Street { get; set; }
         public string Number { get; set; }
-        public string? AddressComplement { get; set; }
+        public string AddressComplement { get; set; }
         public string City { get; set; }
         public string State { get; set; }
         public string Country { get; set; }
@@ -35,7 +35,7 @@ namespace IS.Customers.API.Entities
             IsMainAddress = isMainAddress;
         }
 
-        public void Update(string street, string number, string? addressComplement, string city, string state, string country)
+        public void Update(string street, string number, string addressComplement, string city, string state, string country)
         {
             Street = street;
             Number = number;

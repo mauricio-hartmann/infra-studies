@@ -10,7 +10,7 @@ namespace IS.Core.Logging
         {
         }
 
-        public override object GetValue(LogEvent logEvent, IFormatProvider? formatProvider = null)
+        public override object GetValue(LogEvent logEvent, IFormatProvider formatProvider = null)
         {
             return logEvent.Timestamp.UtcDateTime;
         }

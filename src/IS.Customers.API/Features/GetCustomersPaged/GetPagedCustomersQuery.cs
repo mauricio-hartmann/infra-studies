@@ -7,6 +7,6 @@ namespace IS.Customers.API.Features.GetCustomersPaged
     public record GetPagedCustomersQuery : PaginationParameters, 
                                            IQuery<BaseResult<PagedResult<PagedCustomerDTO>>>
     {
-        public string? Filter { get; init; }
+        public string Filter { get; init; }
     }
 }

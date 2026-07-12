@@ -13,9 +13,9 @@ namespace IS.Core.Cache
             _cache = cache;
         }
 
-        public async Task<T?> GetAsync<T>(string cacheKey, CancellationToken cancellationToken)
+        public async Task<T> GetAsync<T>(string cacheKey, CancellationToken cancellationToken)
         {
-            byte[]? cachedResponse = await _cache.GetAsync(cacheKey, cancellationToken);
+            byte[] cachedResponse = await _cache.GetAsync(cacheKey, cancellationToken);
 
             return cachedResponse == null ? default
                                           : JsonSerializer.Deserialize<T>(cachedResponse);

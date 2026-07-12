@@ -11,11 +11,11 @@ namespace IS.Customers.API.Entities
         public string TradeName { get; set; }
         public string NormalizedTradeName { get; set; }
         public string RegistrationNumber { get; init; }
-        public string? Email { get; set; }
+        public string Email { get; set; }
         public string MainPhone { get; set; }
-        public string? SecondaryPhone { get; set; }
-        public string? SiteUrl { get; set; }
-        public string? MainContactName { get; set; }
+        public string SecondaryPhone { get; set; }
+        public string SiteUrl { get; set; }
+        public string MainContactName { get; set; }
         public ICollection<Address> Addresses { get; init; }
 
         public Customer(string legalName, string tradeName, string registrationNumber) : base()
@@ -41,7 +41,7 @@ namespace IS.Customers.API.Entities
             Addresses.Add(address);
         }
 
-        public void Update(string legalName, string tradeName, string? email, string mainPhone, string? secondaryPhone, string? siteUrl, string mainContactName)
+        public void Update(string legalName, string tradeName, string email, string mainPhone, string secondaryPhone, string siteUrl, string mainContactName)
         {
             LegalName = legalName;
             NormalizedLegalName = legalName.NormalizeToUpper();
@@ -54,9 +54,9 @@ namespace IS.Customers.API.Entities
             MainContactName = mainContactName;
         }
 
-        public BaseResult<bool> UpdateAddress(Guid addressId, string street, string number, string? addressComplement, string city, string state, string country, bool isMainAddress)
+        public BaseResult<bool> UpdateAddress(Guid addressId, string street, string number, string addressComplement, string city, string state, string country, bool isMainAddress)
         {
-            Address? address = Addresses.FirstOrDefault(a => a.Id == addressId);
+            Address address = Addresses.FirstOrDefault(a => a.Id == addressId);
 
             if (address is null)
                 return BaseResult<bool>.Failure("Address does not exist or does not belong to this customer!");
@@ -78,7 +78,7 @@ namespace IS.Customers.API.Entities
 
         public bool DeleteAddress(Guid addressId, Guid? newMainAddressId)
         {
-            Address? address = Addresses.FirstOrDefault(a => a.Id == addressId);
+            Address address = Addresses.FirstOrDefault(a => a.Id == addressId);
 
             if (address is null)
                 return false;

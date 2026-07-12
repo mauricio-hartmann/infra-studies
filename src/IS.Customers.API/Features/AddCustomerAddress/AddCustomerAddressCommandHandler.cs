@@ -31,7 +31,7 @@ namespace IS.Customers.API.Features.AddCustomerAddress
             if (!validationResult.IsValid)
                 return BaseResult<Guid>.Failure(validationResult.ToDictionary());
 
-            Customer? customer = await GetCustomerByIdAsync(request.CustomerId, cancellationToken);
+            Customer customer = await GetCustomerByIdAsync(request.CustomerId, cancellationToken);
 
             if (customer is null)
                 return BaseResult<Guid>.Failure("Customer does not exists!");
@@ -45,7 +45,7 @@ namespace IS.Customers.API.Features.AddCustomerAddress
             return BaseResult<Guid>.Success(address.Id);
         }
 
-        private async Task<Customer?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken)
+        private async Task<Customer> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return await _customerDbContext.Customers
                 .Include(x => x.Addresses)

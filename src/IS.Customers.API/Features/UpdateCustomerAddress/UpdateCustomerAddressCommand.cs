@@ -14,7 +14,7 @@ namespace IS.Customers.API.Features.UpdateCustomerAddress
 
         public string Street { get; init; } = string.Empty;
         public string Number { get; init; } = string.Empty;
-        public string? AddressComplement { get; init; }
+        public string AddressComplement { get; init; }
         public string City { get; init; } = string.Empty;
         public string State { get; init; } = string.Empty;
         public string Country { get; init; } = string.Empty;

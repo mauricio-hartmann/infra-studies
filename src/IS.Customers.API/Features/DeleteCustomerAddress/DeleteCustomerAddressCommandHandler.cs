@@ -31,12 +31,12 @@ namespace IS.Customers.API.Features.DeleteCustomerAddress
             if (!validationResult.IsValid)
                 return BaseResult<bool>.Failure(validationResult.ToDictionary());
 
-            Customer? customer = await GetCustomerWithAddressesAsync(request.CustomerId, cancellationToken);
+            Customer customer = await GetCustomerWithAddressesAsync(request.CustomerId, cancellationToken);
 
             if (customer is null)
                 return BaseResult<bool>.Failure("Customer does not exist!");
 
-            Address? address = customer.Addresses.FirstOrDefault(a => a.Id == request.AddressId);
+            Address address = customer.Addresses.FirstOrDefault(a => a.Id == request.AddressId);
 
             if (address is null)
                 return BaseResult<bool>.Failure("Address does not exist or does not belong to this customer!");
@@ -67,7 +67,7 @@ namespace IS.Customers.API.Features.DeleteCustomerAddress
             return BaseResult<bool>.Success(true);
         }
 
-        private async Task<Customer?> GetCustomerWithAddressesAsync(Guid customerId, CancellationToken cancellationToken)
+        private async Task<Customer> GetCustomerWithAddressesAsync(Guid customerId, CancellationToken cancellationToken)
         {
             return await _customerDbContext.Customers
                 .Include(x => x.Addresses)
