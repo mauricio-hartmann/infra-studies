@@ -34,10 +34,12 @@ namespace IS.Customers.API.Data.Mapping
                 .IsRequired();
 
             builder.Property(x => x.SecondaryPhone)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(x => x.SiteUrl)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.HasIndex(x => x.RegistrationNumber);
 

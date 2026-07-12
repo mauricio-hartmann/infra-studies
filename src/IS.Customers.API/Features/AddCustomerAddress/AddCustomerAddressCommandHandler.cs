@@ -56,7 +56,7 @@ namespace IS.Customers.API.Features.AddCustomerAddress
         {
             return new Address(command.Street,
                                command.Number,
-                               command.AddressComplement ?? string.Empty,
+                               command.AddressComplement,
                                command.City,
                                command.State,
                                command.Country,

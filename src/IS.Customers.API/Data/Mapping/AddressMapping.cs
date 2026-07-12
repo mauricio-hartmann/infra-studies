@@ -18,7 +18,8 @@ namespace IS.Customers.API.Data.Mapping
                 .IsRequired();
 
             builder.Property(x => x.AddressComplement)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(x => x.City)
                 .IsRequired();
