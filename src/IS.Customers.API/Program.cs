@@ -14,6 +14,7 @@ builder.Services.AddOpenApi()
                 .AddDependenciesConfiguration()
                 .AddMediator(typeof(CreateCustomerCommand).Assembly)
                 .AddCache(builder.Configuration, "RedisConnection", "IS.Customer.API")
+                .AddHealthChecksConfiguration(builder.Configuration)
                 .AddControllers();
 
 builder.AddDefaultSerilog("LogsConnection");
@@ -21,6 +22,7 @@ builder.AddDefaultSerilog("LogsConnection");
 WebApplication app = builder.Build();
 
 app.UseOpenApi()
+   .MapHealthChecks()
    .UseExceptionHandler()
    .UseHttpsRedirection()
    .UseAuthorization()
