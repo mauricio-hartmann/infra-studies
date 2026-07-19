@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace IS.Customers.API.Configuration;
+namespace IS.Ticket.API.Configuration;
 
 public static class HealthCheckConfig
 {
@@ -12,9 +12,9 @@ public static class HealthCheckConfig
                 .AddCheck("Application", () => HealthCheckResult.Healthy(), tags: ["live"])
                 .AddCheck(
                     "Database-Check",
-                    new PostgreSqlConnectionHealthCheck(configuration["ConnectionStrings:PostgresCustomersConnection"]),
+                    new PostgreSqlConnectionHealthCheck(configuration["ConnectionStrings:PostgresTicketsConnection"]),
                     HealthStatus.Unhealthy,
-                    ["CustomersDB", "database", "ready"]
+                    ["TicketsDB", "database", "ready"]
                 );
 
         return services;
@@ -22,7 +22,7 @@ public static class HealthCheckConfig
 
     public static WebApplication MapHealthChecks(this WebApplication app)
     {
-        app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = registration => registration.Tags.Contains("live")});
+        app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = registration => registration.Tags.Contains("live") });
         app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = registration => registration.Tags.Contains("ready") });
 
         return app;

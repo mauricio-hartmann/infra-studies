@@ -81,6 +81,40 @@ services:
       start_period: 15s
     networks:
       - "default"
+  tickets.api:
+    image: infra-studies/tickets-api:latest
+    container_name: infra-studies-tickets-api
+    env_file:
+      - ./.env
+    build:
+      context: .
+      dockerfile: src/IS.Ticket.API/Dockerfile
+    ports:
+      - 5001:8080
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: on-failure:3
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "--fail",
+          "--silent",
+          "--show-error",
+          "http://localhost:8080/health/ready"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - "default"
 
 volumes:
   postgres-data:

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using IS.Customers.API.Background;
+using IS.Core.Data;
+using IS.Customers.API.Data;
 using IS.Customers.API.Features.CreateCustomer;
 
 namespace IS.Customers.API.Configuration
@@ -9,7 +10,7 @@ namespace IS.Customers.API.Configuration
         public static IServiceCollection AddDependenciesConfiguration(this IServiceCollection services)
         {
             // background services
-            services.AddHostedService<PostgresMigrationService>();
+            services.AddHostedService<RelationalDatabaseMigrationService<CustomerDbContext>>();
 
             // validators
             services.AddValidatorsFromAssemblyContaining<CreateCustomerCommandValidator>();
