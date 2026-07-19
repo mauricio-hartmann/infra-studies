@@ -1,6 +1,8 @@
 ﻿using FluentValidation.Results;
 using IS.Core.Communication;
 using IS.Core.Mediator.Interfaces;
+using IS.Core.Messaging.Events.IntegrationEvents;
+using IS.Core.Messaging.Outbox;
 using IS.Customers.API.Data;
 using IS.Customers.API.Entities;
 
@@ -26,7 +28,10 @@ namespace IS.Customers.API.Features.CreateCustomer
                 return BaseResult<Guid>.Failure(validationResult.ToDictionary());
 
             Customer customer = CreateCustomer(request);
-            await SaveAsync(customer, cancellationToken);
+            OutboxMessage customerCreatedOutboxMessage = CustomerCreatedOutboxMessage(customer);           
+            await _customerDbContext.Customers.AddAsync(customer, cancellationToken);
+            await _customerDbContext.OutboxMessages.AddAsync(customerCreatedOutboxMessage, cancellationToken);
+            await _customerDbContext.SaveChangesAsync(cancellationToken);
 
             return BaseResult<Guid>.Success(customer.Id);
         }
@@ -43,10 +48,18 @@ namespace IS.Customers.API.Features.CreateCustomer
             };
         }
 
-        private async Task SaveAsync(Customer customer, CancellationToken cancellationToken)
+        private OutboxMessage CustomerCreatedOutboxMessage(Customer customer)
         {
-            await _customerDbContext.AddAsync(customer, cancellationToken);
-            await _customerDbContext.SaveChangesAsync(cancellationToken);
+            var payload = new
+            {
+                CustomerId = customer.Id,
+                customer.LegalName,
+                customer.TradeName,
+                customer.RegistrationNumber,
+                customer.DateCreated
+            };
+
+            return new OutboxMessage(customer.Id, Events.CustomerCreatedIntegrationEvent, payload);
         }
     }
 }

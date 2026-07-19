@@ -1,4 +1,6 @@
-﻿namespace IS.Core.Messaging.Outbox;
+﻿using System.Text.Json;
+
+namespace IS.Core.Messaging.Outbox;
 
 public sealed class OutboxMessage
 {
@@ -18,20 +20,27 @@ public sealed class OutboxMessage
     // EF Relations
     public ICollection<OutboxPublishAttempt> OutboxPublishAttempts { get; init; }
 
-    public OutboxMessage()
+    public OutboxMessage(Guid aggregateId)
     {
         Id = Guid.NewGuid();
         Status = OutboxMessageStatus.Pending;
         OccurredAtUtc = DateTime.UtcNow;
         NextAttemptAtUtc = DateTime.UtcNow;
         AttemptCount = 0;
+        AggregateId = aggregateId;
         OutboxPublishAttempts = [];
     }
 
 
-    public OutboxMessage(string eventType, string payload) : this()
+    public OutboxMessage(Guid aggregateId, string eventType, string payload) : this(aggregateId)
     {
         EventType = eventType;
         Payload = payload;
+    }
+
+    public OutboxMessage(Guid aggregateId, string eventType, object payload) : this(aggregateId)
+    {
+        EventType = eventType;
+        Payload = JsonSerializer.Serialize(payload);
     }
 }
