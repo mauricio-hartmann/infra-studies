@@ -13,7 +13,7 @@ builder.Services.AddOpenApi()
                 .AddDbContext<CustomerDbContext>("PostgresConnection", builder.Environment)
                 .AddDependenciesConfiguration()
                 .AddMediator(typeof(CreateCustomerCommand).Assembly)
-                .AddCache(builder.Configuration, "RedisConnection", "IS.Customer.API")
+                .AddCache(builder.Configuration, "RedisConnection")
                 .AddHealthChecksConfiguration(builder.Configuration)
                 .AddControllers();
 

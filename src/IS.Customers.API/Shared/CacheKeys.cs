@@ -2,6 +2,6 @@
 {
     public static class CacheKeys
     {
-        public static string Customer(Guid customerId) => $"-cache-customer-{customerId}";
+        public static string Customer(Guid customerId) => $"cache:customer:{customerId}";
     }
 }
