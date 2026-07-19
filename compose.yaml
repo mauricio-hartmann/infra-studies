@@ -46,6 +46,29 @@ services:
       start_period: 5s
     networks:
       - "default"
+  
+  rabbitmq:
+    image: rabbitmq:4.3.2-management-alpine
+    container_name: infra-studies-rabbitmq
+    restart: on-failure:5
+    ports:
+      - "15672:15672" # RabbitMQ Management UI
+      - "5672:5672" # RabbitMQ AMQP
+    env_file:
+      - ./.env
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - "default"
+    healthcheck:
+      test:
+        - CMD
+        - rabbitmq-diagnostics
+        - '-q'
+        - ping
+      retries: 3
+      timeout: 5s
+      interval: 30s
 
   customers.api:
     image: infra-studies/customers-api:latest
@@ -119,6 +142,7 @@ services:
 volumes:
   postgres-data:
   redis-data:
+  rabbitmq_data:
 
 networks:
   default:
